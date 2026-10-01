@@ -236,10 +236,10 @@ form.addEventListener("submit", (e) => {
   if (missingFields || !consent.checked) {
     status.className = "form__status";
     status.textContent = missingFields && !consent.checked
-      ? "Completează numele și telefonul și bifează acordul cu Termenii și Politica de confidențialitate."
+      ? "Completează numele și telefonul și bifează căsuța de acord de sub formular."
       : missingFields
         ? "Completează numele și telefonul, te rugăm."
-        : "Bifează acordul cu Termenii și condițiile și Politica de confidențialitate.";
+        : "Bifează căsuța de acord: Termenii și condițiile și Politica de confidențialitate.";
     (form.querySelector(".is-invalid:not(label)") || consent).focus();
     return;
   }
