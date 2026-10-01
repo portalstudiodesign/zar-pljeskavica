@@ -270,6 +270,42 @@ form.addEventListener("input", (e) => {
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// Marquee — the words are written once in the HTML; repeat the group until it
+// covers the screen plus one extra period, then slide by exactly one group so
+// the loop is seamless at any width (no empty red tail on wide monitors).
+(() => {
+  const track = document.querySelector(".marquee__track");
+  if (!track) return;
+  const group = track.querySelector(".marquee__group");
+  const SPEED = 40; // px per second, the same on every screen size
+
+  const build = () => {
+    track.classList.remove("is-running");
+    track.querySelectorAll(".marquee__group.is-clone").forEach((c) => c.remove());
+    const period = group.getBoundingClientRect().width;
+    if (!period) return;
+    const copies = Math.ceil(track.parentElement.clientWidth / period) + 1;
+    for (let i = 0; i < copies; i++) {
+      const c = group.cloneNode(true);
+      c.classList.add("is-clone");
+      track.append(c);
+    }
+    track.style.setProperty("--marquee-shift", `${period}px`);
+    track.style.setProperty("--marquee-dur", `${period / SPEED}s`);
+    if (!reduceMotion) track.classList.add("is-running");
+  };
+
+  let lastW = 0, t;
+  const onResize = () => {
+    if (window.innerWidth === lastW) return; // ignore mobile address-bar height changes
+    lastW = window.innerWidth;
+    clearTimeout(t);
+    t = setTimeout(build, 150);
+  };
+  (document.fonts?.ready ?? Promise.resolve()).then(() => { lastW = window.innerWidth; build(); });
+  window.addEventListener("resize", onResize);
+})();
+
 // Hero embers — sparks rising off the grill
 (() => {
   if (reduceMotion) return;
