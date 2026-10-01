@@ -42,6 +42,8 @@ Apoi deschide http://localhost:5178.
 
 GitHub Pages servește ramura `main`, din rădăcină. Un `git push` pe `main` republică site-ul în ~1 minut.
 
+GitHub Pages le cere browserelor să păstreze fișierele până la 10 minute. La fiecare modificare în `styles.css` sau `script.js`, schimbă versiunea din `index.html` (`styles.css?v=…`, `script.js?v=…`), ca vizitatorii să primească imediat fișierele noi.
+
 ## Poze
 
 - Cardurile din meniu folosesc poze 4:3, cu preparatul în centru (decupate din originale 16:9).
