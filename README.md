@@ -21,11 +21,13 @@ Ce mai e de făcut până la lansare e în [issues](https://github.com/portalstu
 Site static, fără build și fără dependențe:
 
 ```
-index.html     conținutul paginii
-styles.css     stiluri (culori și dimensiuni în variabilele din :root)
-script.js      meniu mobil, tab-uri meniu, animații, formular catering, scântei în hero
-img/           poze .webp + imaginea de previzualizare pentru link-uri (og-image.jpg)
-.nojekyll      GitHub Pages servește fișierele exact cum sunt
+index.html               conținutul paginii
+confidentialitate.html   politica de confidențialitate (GDPR)
+styles.css               stiluri (culori și dimensiuni în variabilele din :root), inclusiv @font-face
+script.js                meniu mobil, categorii meniu, detalii preparate, animații, formular catering, scântei în hero
+img/                     poze .webp, pictograma ANPC SAL, imaginea de previzualizare pentru link-uri (og-image.jpg)
+fonts/                   Bricolage Grotesque și Inter găzduite local (.woff2) + licențele OFL
+.nojekyll                GitHub Pages servește fișierele exact cum sunt
 ```
 
 ## Rulare locală
@@ -50,6 +52,16 @@ GitHub Pages le cere browserelor să păstreze fișierele până la 10 minute. L
 - Poza din prima secțiune e pătrată, cu marginile aproape negre, pentru că se estompează în fundal.
 - Numele fișierelor sunt referite din `index.html`. O poză nouă salvată cu același nume înlocuiește poza veche fără alte modificări.
 - Originalele la rezoluție mare nu sunt în repo.
+- Pozele generate cu AI au clasa `ai-img`, care afișează eticheta „Imagine generată AI” (AI Act, art. 50). Când o poză e înlocuită cu una reală, se scoate clasa.
+
+## Conformitate
+
+- **Pictograma ANPC SAL** în bara de meniu, pe telefon în meniul deschis și în subsol, cu link spre reclamatiisal.anpc.ro (Ord. ANPC 449/2022, mod. 270/2026).
+- **Fără cookie-uri și fără resurse externe:** fonturile sunt găzduite local, deci nu e nevoie de banner de cookie-uri.
+- **Politica de confidențialitate** în `confidentialitate.html`, cu link de lângă formular.
+- **Alergenii și ingredientele** fiecărui preparat, în blocurile `dish__details` din `index.html` (Reg. UE 1169/2011).
+
+Ce mai e de verificat e în issues, cu eticheta [`legal`](https://github.com/portalstudiodesign/zar-pljeskavica/issues?q=label%3Alegal).
 
 ---
 
