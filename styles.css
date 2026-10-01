@@ -150,13 +150,20 @@ p { margin: 0; }
 @media (max-width: 860px) {
   .nav__links {
     position: fixed; inset: calc(76px + var(--bar)) 0 auto; flex-direction: column; gap: 0; margin: 0;
-    background: rgba(20,17,15,.97); padding: .5rem 16px 1.5rem;
+    background: var(--ink); padding: .5rem 16px 1.5rem;
     transform: translateY(-8px); opacity: 0; pointer-events: none;
     transition: opacity .25s, transform .25s var(--ease);
   }
   .nav__links a { padding: 1rem 0; font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,.07); }
   .nav__links a::after { display: none; }
-  .nav.is-open { background: rgba(20,17,15,.97); }
+  .nav.is-open { background: var(--ink); }
+  /* dims the page under the open menu; a tap on it closes the menu */
+  .nav-backdrop {
+    position: fixed; inset: 0; z-index: 45; background: rgba(10,8,7,.55);
+    opacity: 0; pointer-events: none; transition: opacity .25s var(--ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-backdrop.is-visible { opacity: 1; pointer-events: auto; }
   .nav.is-open .nav__links { opacity: 1; transform: none; pointer-events: auto; }
   .nav__cta { margin-left: auto; }
   .nav__sal--bar { display: none; }

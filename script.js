@@ -15,16 +15,24 @@ const onScroll = () => {
 window.addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
-burger.addEventListener("click", () => {
-  const open = nav.classList.toggle("is-open");
+// Mobile menu: opens with the burger; closes on a link, a tap anywhere outside it, or Escape.
+const backdrop = document.querySelector(".nav-backdrop");
+const setMenu = (open) => {
+  nav.classList.toggle("is-open", open);
+  backdrop.classList.toggle("is-visible", open);
   burger.setAttribute("aria-expanded", open);
+};
+burger.addEventListener("click", () => setMenu(!nav.classList.contains("is-open")));
+backdrop.addEventListener("click", () => setMenu(false));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && nav.classList.contains("is-open")) {
+    setMenu(false);
+    burger.focus();
+  }
 });
-document.querySelectorAll(".nav__links a").forEach((a) =>
-  a.addEventListener("click", () => {
-    nav.classList.remove("is-open");
-    burger.setAttribute("aria-expanded", "false");
-  })
-);
+document.querySelectorAll(".nav__links a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+// the menu only exists below 860px; don't leave the page dimmed after rotating / resizing
+matchMedia("(min-width: 861px)").addEventListener("change", (e) => { if (e.matches) setMenu(false); });
 
 // Menu categories — sticky tab bar with a sliding pill, item counts, a "next
 // category" card at the end of each panel, swipe on touch, and a one-time sweep
