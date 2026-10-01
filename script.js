@@ -84,9 +84,38 @@ document.querySelectorAll(".nav__links a").forEach((a) =>
     if (window.scrollY > target + 4) window.scrollTo({ top: target, behavior: reduceMotion ? "auto" : "smooth" });
   };
 
+  // Tapping a card selects it: it turns dark and reveals ingredients,
+  // quantity and allergens. One card open at a time.
+  let openDish = null;
+  const setOpen = (d, open) => {
+    d.classList.toggle("is-open", open);
+    d.querySelector(".dish__more").setAttribute("aria-expanded", open);
+    openDish = open ? d : openDish === d ? null : openDish;
+  };
+  panels.forEach((p) => p.querySelectorAll(".dish").forEach((d) => d.addEventListener("click", (e) => {
+    // let people select text inside the open details without closing the card
+    if (d.classList.contains("is-open") && e.target.closest(".dish__details")) return;
+    const open = !d.classList.contains("is-open");
+    if (openDish && openDish !== d) setOpen(openDish, false);
+    setOpen(d, open);
+    if (!open) return;
+    // once it has grown, make sure the whole card is on screen
+    setTimeout(() => {
+      const r = d.getBoundingClientRect();
+      // keep clear of the floating "Comandă" button on phones
+      const fabEl = document.querySelector(".fab.is-visible");
+      const reserved = fabEl && getComputedStyle(fabEl).display !== "none" ? window.innerHeight - fabEl.getBoundingClientRect().top + 12 : 16;
+      const below = r.bottom - (window.innerHeight - reserved);
+      // details matter more than the photo: the photo may slide under the bar, the title row may not
+      const room = d.querySelector("h3").getBoundingClientRect().top - menuNav.getBoundingClientRect().bottom - 12;
+      if (below > 0 && room > 0) window.scrollBy({ top: Math.min(below, room), behavior: reduceMotion ? "auto" : "smooth" });
+    }, reduceMotion ? 0 : 470);
+  })));
+
   function select(i, { dir = Math.sign(i - current) || 1, focus = false } = {}) {
     stopSweep();
     if (i === current) return;
+    if (openDish) setOpen(openDish, false);
     tabs.forEach((t, k) => {
       const on = k === i;
       t.setAttribute("aria-selected", on);
