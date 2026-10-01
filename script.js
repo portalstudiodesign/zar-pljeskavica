@@ -26,19 +26,152 @@ document.querySelectorAll(".nav__links a").forEach((a) =>
   })
 );
 
-// Menu tabs
-const tabs = document.querySelectorAll('[role="tab"]');
-const panels = document.querySelectorAll(".menu__panel");
-tabs.forEach((tab) =>
-  tab.addEventListener("click", () => {
-    tabs.forEach((t) => t.setAttribute("aria-selected", t === tab));
-    panels.forEach((p) => {
-      const active = p.dataset.panel === tab.dataset.tab;
-      p.hidden = !active;
-      p.classList.toggle("is-active", active);
+// Menu categories — sticky tab bar with a sliding pill, item counts, a "next
+// category" card at the end of each panel, swipe on touch, and a one-time sweep
+// across all tabs so visitors notice there is more than one category.
+(() => {
+  const tablist = document.querySelector(".tabs");
+  const menuNav = document.querySelector(".menu__nav");
+  const menu = document.querySelector(".menu");
+  const pill = tablist.querySelector(".tabs__pill");
+  const tabs = [...tablist.querySelectorAll('[role="tab"]')];
+  const panels = tabs.map((t) => document.getElementById(t.getAttribute("aria-controls")));
+  const names = tabs.map((t) => t.textContent.trim());
+  const counts = panels.map((p) => p.querySelectorAll(".dish").length);
+  let current = tabs.findIndex((t) => t.getAttribute("aria-selected") === "true");
+  let sweeping = null;
+
+  const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+  tabs.forEach((t, i) => {
+    t.insertAdjacentHTML("beforeend", `<span class="tabs__count" aria-hidden="true">${counts[i]}</span>`);
+    t.setAttribute("aria-label", `${names[i]}, ${counts[i]} produse`);
+  });
+
+  panels.forEach((p, i) => {
+    const n = (i + 1) % panels.length;
+    const last = n === 0;
+    const firstImg = panels[n].querySelector(".dish__img");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "menu__next";
+    btn.innerHTML = `
+      ${firstImg ? `<img class="menu__next-bg" src="${firstImg.getAttribute("src")}" alt="" loading="lazy">` : ""}
+      <span class="menu__next-text">
+        <span class="menu__next-label">${last ? "Ai văzut tot meniul · înapoi la" : "Urmează"}</span>
+        <span class="menu__next-title">${names[n]}</span>
+        <span class="menu__next-meta">${counts[n]} preparate</span>
+      </span>
+      <span class="menu__next-arrow" aria-hidden="true">${arrow}</span>`;
+    btn.setAttribute("aria-label", `${last ? "Înapoi la" : "Următoarea categorie:"} ${names[n]}`);
+    // move focus to the new tab only for keyboard users; a tap shouldn't leave a focus ring behind
+    btn.addEventListener("click", () => select(n, { dir: last ? -1 : 1, focus: btn.matches(":focus-visible") }));
+    p.append(btn);
+  });
+
+  const placePill = (i) => {
+    const b = tabs[i];
+    pill.style.width = `${b.offsetWidth}px`;
+    pill.style.transform = `translateX(${b.offsetLeft}px)`;
+  };
+
+  const stickyTop = () => parseFloat(getComputedStyle(menuNav).top) || 0;
+
+  // When the visitor is already deep in a long panel, jump back to the top of
+  // the menu so the new category starts at its first card.
+  const scrollToMenuStart = () => {
+    const target = menu.getBoundingClientRect().top + window.scrollY - stickyTop() - menuNav.offsetHeight - 16;
+    if (window.scrollY > target + 4) window.scrollTo({ top: target, behavior: reduceMotion ? "auto" : "smooth" });
+  };
+
+  function select(i, { dir = Math.sign(i - current) || 1, focus = false } = {}) {
+    stopSweep();
+    if (i === current) return;
+    tabs.forEach((t, k) => {
+      const on = k === i;
+      t.setAttribute("aria-selected", on);
+      t.tabIndex = on ? 0 : -1;
     });
-  })
-);
+    panels.forEach((p, k) => {
+      p.hidden = k !== i;
+      p.classList.toggle("is-active", k === i);
+      p.classList.remove("is-entering");
+    });
+    const panel = panels[i];
+    if (!reduceMotion) {
+      panel.style.setProperty("--from", `${dir * 56}px`);
+      [...panel.children].forEach((c, k) => c.style.setProperty("--i", Math.min(k, 8)));
+      void panel.offsetWidth; // restart the animation
+      panel.classList.add("is-entering");
+    }
+    current = i;
+    placePill(i);
+    scrollToMenuStart();
+    if (focus) tabs[i].focus({ preventScroll: true });
+  }
+
+  tabs.forEach((t, i) => t.addEventListener("click", () => select(i)));
+  panels.forEach((p) => p.addEventListener("animationend", (e) => { if (e.target.parentElement === p) p.classList.remove("is-entering"); }));
+
+  // Arrow keys move between tabs (standard tablist behaviour).
+  tablist.addEventListener("keydown", (e) => {
+    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (e.key === "Home" || e.key === "End" || step) {
+      e.preventDefault();
+      const n = e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : (current + step + tabs.length) % tabs.length;
+      select(n, { dir: step || (n > current ? 1 : -1), focus: true });
+    }
+  });
+
+  // Swipe left / right on the cards to change category.
+  let sx = 0, sy = 0, swiping = false;
+  menu.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; swiping = true; }, { passive: true });
+  menu.addEventListener("touchend", (e) => {
+    if (!swiping) return;
+    swiping = false;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+    const dir = dx < 0 ? 1 : -1;
+    select((current + dir + tabs.length) % tabs.length, { dir });
+  }, { passive: true });
+
+  // Shadow under the bar once it is pinned.
+  const onMenuScroll = () => menuNav.classList.toggle("is-stuck", menuNav.getBoundingClientRect().top <= stickyTop() + 0.5 && menu.getBoundingClientRect().bottom > stickyTop() + menuNav.offsetHeight);
+  window.addEventListener("scroll", onMenuScroll, { passive: true });
+
+  // One-time sweep: the pill visits every category, then comes back.
+  function stopSweep() {
+    if (!sweeping) return;
+    sweeping.forEach(clearTimeout);
+    sweeping = null;
+    tablist.classList.remove("is-sweeping");
+    tabs.forEach((t) => t.classList.remove("is-peek"));
+    placePill(current);
+  }
+  const sweep = () => {
+    if (reduceMotion) return;
+    const order = [...tabs.keys()].filter((k) => k !== current).concat(current);
+    sweeping = order.map((k, step) => setTimeout(() => {
+      tablist.classList.toggle("is-sweeping", k !== current);
+      tabs.forEach((t, j) => t.classList.toggle("is-peek", j === k && k !== current));
+      placePill(k);
+      if (step === order.length - 1) sweeping = null;
+    }, 350 + step * 420));
+  };
+  const seen = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    seen.disconnect();
+    sweep();
+  }, { threshold: 1, rootMargin: "0px 0px -15% 0px" });
+
+  const init = () => {
+    placePill(current);
+    requestAnimationFrame(() => tablist.classList.add("is-ready"));
+    seen.observe(tablist);
+  };
+  window.addEventListener("resize", () => placePill(current));
+  (document.fonts?.ready ?? Promise.resolve()).then(init);
+})();
 
 // Reveal on scroll
 const io = new IntersectionObserver(

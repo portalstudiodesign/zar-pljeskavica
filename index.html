@@ -93,15 +93,18 @@
         <h2>Făcute pe loc,<br>la foc de cărbuni.</h2>
       </div>
 
-      <div class="tabs reveal" role="tablist" aria-label="Categorii meniu">
-        <button role="tab" aria-selected="true" data-tab="pljeskavice">Pljeskavice</button>
-        <button role="tab" aria-selected="false" data-tab="gratar">Grătar</button>
-        <button role="tab" aria-selected="false" data-tab="garnituri">Garnituri</button>
-        <button role="tab" aria-selected="false" data-tab="bauturi">Băuturi</button>
+      <div class="menu__nav reveal">
+        <div class="tabs" role="tablist" aria-label="Categorii meniu">
+          <span class="tabs__pill" aria-hidden="true"></span>
+          <button role="tab" id="tab-pljeskavice" aria-controls="panel-pljeskavice" aria-selected="true" data-tab="pljeskavice">Pljeskavice</button>
+          <button role="tab" id="tab-gratar" aria-controls="panel-gratar" aria-selected="false" tabindex="-1" data-tab="gratar">Grătar</button>
+          <button role="tab" id="tab-garnituri" aria-controls="panel-garnituri" aria-selected="false" tabindex="-1" data-tab="garnituri">Garnituri</button>
+          <button role="tab" id="tab-bauturi" aria-controls="panel-bauturi" aria-selected="false" tabindex="-1" data-tab="bauturi">Băuturi</button>
+        </div>
       </div>
 
       <div class="menu">
-        <div class="menu__panel is-active" data-panel="pljeskavice" role="tabpanel">
+        <div class="menu__panel is-active" data-panel="pljeskavice" role="tabpanel" id="panel-pljeskavice" aria-labelledby="tab-pljeskavice">
           <article class="dish dish--featured dish--photo">
             <img class="dish__img" src="img/clasica.webp" width="1024" height="768" alt="Pljeskavica clasică în lepinja deschisă, cu kajmak, ajvar și ceapă crudă, pe tocător de lemn" loading="lazy">
             <div class="dish__badge">Cea mai comandată</div>
@@ -141,7 +144,7 @@
           </article>
         </div>
 
-        <div class="menu__panel" data-panel="gratar" role="tabpanel" hidden>
+        <div class="menu__panel" data-panel="gratar" role="tabpanel" id="panel-gratar" aria-labelledby="tab-gratar" hidden>
           <article class="dish dish--featured dish--photo">
             <img class="dish__img" src="img/cevapi-10.webp" width="1024" height="768" alt="Ćevapi în lepinja, cu ceapă roșie și kajmak, pe tocător de lemn" loading="lazy">
             <div class="dish__badge">Clasic balcanic</div>
@@ -175,7 +178,7 @@
           </article>
         </div>
 
-        <div class="menu__panel" data-panel="garnituri" role="tabpanel" hidden>
+        <div class="menu__panel" data-panel="garnituri" role="tabpanel" id="panel-garnituri" aria-labelledby="tab-garnituri" hidden>
           <article class="dish dish--featured dish--photo">
             <img class="dish__img" src="img/kajmak.webp" width="1024" height="768" alt="Kajmak într-un bol de lut, cu pâine, roșii și ceapă roșie" loading="lazy">
             <div class="dish__badge">De casă</div>
@@ -188,7 +191,7 @@
           <article class="dish dish--photo"><img class="dish__img" src="img/lepinja.webp" width="1024" height="768" alt="Lepinja coaptă, ruptă în bucăți, pe tocător de lemn" loading="lazy"><h3>Lepinja extra</h3><p>Coaptă în casă, la cuptor.</p><div class="dish__price">6 <small>lei</small></div></article>
         </div>
 
-        <div class="menu__panel" data-panel="bauturi" role="tabpanel" hidden>
+        <div class="menu__panel" data-panel="bauturi" role="tabpanel" id="panel-bauturi" aria-labelledby="tab-bauturi" hidden>
           <article class="dish dish--photo"><img class="dish__img" src="img/jelen.webp" width="1024" height="768" alt="Sticlă și pahar de bere Jelen Pivo pe masa de lemn" loading="lazy"><h3>Jelen Pivo</h3><p>0,5 l. Bere sârbească.</p><div class="dish__price">14 <small>lei</small></div></article>
           <article class="dish dish--photo"><img class="dish__img" src="img/limonada.webp" width="1024" height="768" alt="Limonadă de casă cu mentă și lămâie, lângă o carafă de lut pictată" loading="lazy"><h3>Limonadă de casă</h3><p>Lămâie, mentă, miere.</p><div class="dish__price">16 <small>lei</small></div></article>
           <article class="dish dish--photo"><img class="dish__img" src="img/rakija.webp" width="1024" height="768" alt="Două pahare de rakija de prune, cu carafă de lut, prune și nuci" loading="lazy"><h3>Rakija de prune</h3><p>50 ml, din Serbia.</p><div class="dish__price">15 <small>lei</small></div></article>

@@ -226,24 +226,93 @@ p { margin: 0; }
 .section__head--center { text-align: center; }
 
 /* ---------- Menu ---------- */
-.tabs {
-  display: inline-flex; gap: .3rem; padding: .35rem; margin-bottom: 2rem;
-  background: var(--cream-2); border-radius: 999px; max-width: 100%; overflow-x: auto; scrollbar-width: none;
+/* Category bar sticks under the header while you scroll through the menu,
+   so the other categories never leave the screen. */
+.menu__nav {
+  position: sticky; top: calc(76px + var(--bar) + 10px); z-index: 30;
+  display: flex; margin-bottom: 2rem; pointer-events: none;
 }
-.tabs::-webkit-scrollbar { display: none; }
+.tabs {
+  position: relative; display: inline-flex; gap: .25rem; padding: .35rem; max-width: 100%;
+  background: rgba(243, 233, 218, .92); border-radius: 999px; pointer-events: auto;
+  backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow: inset 0 0 0 1px var(--line);
+  transition: box-shadow .3s var(--ease);
+}
+.menu__nav.is-stuck .tabs { box-shadow: inset 0 0 0 1px var(--line), 0 14px 34px -14px rgba(20,17,15,.45); }
+.tabs__pill {
+  position: absolute; top: .35rem; bottom: .35rem; left: 0; width: 0; border-radius: 999px;
+  background: var(--ink); box-shadow: 0 6px 16px -8px rgba(20,17,15,.6);
+  opacity: 0;
+}
+.tabs.is-ready .tabs__pill { opacity: 1; transition: transform .5s cubic-bezier(.34, 1.45, .64, 1), width .5s cubic-bezier(.34, 1.45, .64, 1); }
 .tabs button {
-  border: 0; background: transparent; cursor: pointer; padding: .7rem 1.3rem; border-radius: 999px;
+  position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+  border: 0; background: transparent; cursor: pointer; padding: .7rem 1.2rem; border-radius: 999px;
   font: 600 .95rem/1 var(--body); color: var(--muted); white-space: nowrap;
-  transition: background .25s, color .25s, box-shadow .25s;
+  transition: color .3s;
 }
 .tabs button:hover { color: var(--ink); }
-.tabs button[aria-selected="true"] { background: var(--ink); color: var(--cream); box-shadow: 0 6px 16px -8px rgba(20,17,15,.6); }
+.tabs button[aria-selected="true"], .tabs button.is-peek { color: var(--cream); }
+/* while the pill is away on its intro sweep, the selected label sits on the light bar */
+.tabs.is-sweeping button[aria-selected="true"]:not(.is-peek) { color: var(--ink); }
+.tabs.is-sweeping button[aria-selected="true"]:not(.is-peek) .tabs__count { background: rgba(20,17,15,.08); color: inherit; }
+/* no-JS fallback: the pill is positioned by script.js */
+html:not(.js) .tabs button[aria-selected="true"] { background: var(--ink); }
+.tabs__count {
+  display: inline-grid; place-items: center; min-width: 1.45em; height: 1.45em; padding: 0 .35em; border-radius: 999px;
+  font: 700 .72rem/1 var(--body); background: rgba(20,17,15,.08); color: inherit;
+  transition: background .3s, color .3s, transform .3s var(--ease);
+}
+.tabs button[aria-selected="true"] .tabs__count, .tabs button.is-peek .tabs__count { background: var(--fire); color: #fff; }
+.tabs button.is-peek .tabs__count { transform: scale(1.2); }
+@media (max-width: 640px) {
+  .menu__nav { top: calc(76px + var(--bar) + 8px); }
+  .tabs { display: flex; width: 100%; gap: .15rem; padding: .3rem; }
+  .tabs__pill { top: .3rem; bottom: .3rem; }
+  .tabs button { flex: 1 1 auto; min-width: 0; padding: .72rem .35rem; font-size: .82rem; gap: .3rem; }
+  .tabs__count { font-size: .64rem; }
+}
+@media (max-width: 400px) { .tabs__count { display: none; } }
 
 .menu { display: grid; }
 .menu__panel { grid-area: 1 / 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; align-content: start; }
 .menu__panel[hidden] { display: none; }
-.menu__panel.is-active { animation: panelIn .45s var(--ease); }
-@keyframes panelIn { from { opacity: 0; transform: translateY(10px); } }
+/* Cards slide in from the side you switched towards, one after another. */
+.menu__panel.is-entering > * { animation: dishIn .6s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 55ms); }
+@keyframes dishIn { from { opacity: 0; transform: translateX(var(--from, 0px)) translateY(14px) scale(.97); } }
+
+/* "Next category" card at the end of each panel — where the menu used to look finished. */
+.menu__next {
+  grid-column: 1 / -1; position: relative; overflow: hidden; isolation: isolate;
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .3rem 1.2rem;
+  min-height: 150px; padding: 1.6rem 1.8rem; border: 0; border-radius: var(--radius); cursor: pointer; text-align: left;
+  color: var(--cream); background: var(--ink); font: inherit;
+  box-shadow: 0 20px 40px -22px rgba(20,17,15,.7);
+}
+.menu__next-bg {
+  position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: center 60%;
+  transform: scale(1.04); transition: transform .8s var(--ease);
+}
+.menu__next::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(100deg, rgba(20,17,15,.94) 0%, rgba(20,17,15,.78) 45%, rgba(20,17,15,.35) 100%);
+}
+.menu__next:hover .menu__next-bg, .menu__next:focus-visible .menu__next-bg { transform: scale(1.1); }
+.menu__next-text { grid-column: 1; display: grid; gap: .35rem; }
+.menu__next-label { font: 600 .75rem/1 var(--body); text-transform: uppercase; letter-spacing: .14em; color: var(--ember); }
+.menu__next-title { font: 800 clamp(1.8rem, 5vw, 2.6rem)/1 var(--display); letter-spacing: -.02em; }
+.menu__next-meta { font-size: .92rem; color: var(--muted-light); }
+.menu__next-arrow {
+  grid-column: 2; display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--fire), var(--fire-2)); color: #fff;
+  box-shadow: 0 10px 26px -8px rgba(232,69,44,.8);
+  animation: nudge 1.8s var(--ease) infinite;
+  transition: transform .3s var(--ease);
+}
+.menu__next-arrow svg { width: 24px; height: 24px; }
+.menu__next:hover .menu__next-arrow { transform: scale(1.08); }
+@keyframes nudge { 0%, 60%, 100% { translate: 0; } 30% { translate: 6px 0; } }
 .dish {
   position: relative; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr; column-gap: 1rem; row-gap: .4rem;
   padding: 1.6rem; border-radius: var(--radius); background: var(--paper);
