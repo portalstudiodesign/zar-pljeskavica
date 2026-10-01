@@ -548,8 +548,19 @@ html:not(.js) .tabs button[aria-selected="true"] { background: var(--ink); }
 .legal__facts li + li { border-top: 1px solid var(--line); }
 .legal__facts li span:first-child { font-weight: 600; }
 .legal__todo { color: var(--fire); font-style: italic; }
-.form__privacy { font-size: .8rem; color: var(--muted); text-align: center; }
-.form__privacy a { color: var(--fire); border-bottom: 1px solid rgba(232,69,44,.3); }
+/* Consent checkbox — never pre-ticked; links open in a new tab so the form isn't lost */
+.form label.form__consent {
+  display: flex; align-items: flex-start; gap: .7rem; cursor: pointer;
+  font: 500 .85rem/1.45 var(--body); color: var(--ink-3);
+  padding: .8rem .9rem; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px rgba(20,17,15,.12);
+  transition: box-shadow .2s, background .2s;
+}
+.form__consent input {
+  flex: none; width: 20px; height: 20px; margin: .05rem 0 0; padding: 0; accent-color: var(--fire); cursor: pointer;
+}
+.form__consent a { color: var(--fire); font-weight: 600; border-bottom: 1px solid rgba(232,69,44,.35); }
+.form__consent a:hover { border-bottom-color: var(--fire); }
+.form label.form__consent.is-invalid { background: #fff5f3; box-shadow: inset 0 0 0 1.5px var(--fire); }
 
 /* ---------- Floating call button (mobile) ---------- */
 .fab {

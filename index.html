@@ -23,7 +23,7 @@
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="preload" href="fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=2026-10-01d">
+  <link rel="stylesheet" href="styles.css?v=2026-10-01e">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23e8452c'/><stop offset='1' stop-color='%23ff7a2f'/></linearGradient></defs><rect width='64' height='64' rx='18' fill='url(%23g)'/><text x='32' y='46' font-size='36' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='%23fff'>Ž</text></svg>">
 </head>
 <body>
@@ -349,8 +349,12 @@
           <label>Nr. invitați<input name="invitati" type="number" min="10" step="10" placeholder="ex. 80"></label>
         </div>
         <label>Detalii<textarea name="detalii" rows="3" placeholder="Tipul evenimentului, locația, preferințe…"></textarea></label>
+        <label class="form__consent">
+          <input type="checkbox" name="acord" required>
+          <span>Am citit și accept <a href="termeni.html" target="_blank" rel="noopener">Termenii și condițiile</a> și <a href="confidentialitate.html" target="_blank" rel="noopener">Politica de confidențialitate</a>.</span>
+        </label>
         <button class="btn btn--dark btn--block" type="submit">Trimite cererea</button>
-        <p class="form__privacy">Folosim datele doar ca să-ți trimitem oferta. Detalii în <a href="confidentialitate.html">Politica de confidențialitate</a>.</p>
+
         <p class="form__status" role="status" aria-live="polite"></p>
       </form>
     </div>
@@ -399,7 +403,7 @@
   </div>
   <div class="container footer__legal">
     <span>© <span id="year">2026</span> ŽAR Pljeskavica</span>
-    <span class="footer__links"><a href="confidentialitate.html">Politica de confidențialitate</a> · <a href="https://anpc.ro" target="_blank" rel="noopener">ANPC</a></span>
+    <span class="footer__links"><a href="termeni.html">Termeni și condiții</a> · <a href="confidentialitate.html">Politica de confidențialitate</a> · <a href="https://anpc.ro" target="_blank" rel="noopener">ANPC</a></span>
     <p class="footer__ai">Imaginile preparatelor și ale localului sunt generate cu inteligență artificială, cu titlu de prezentare, și pot diferi de preparatele servite.</p>
     <a class="nav__sal footer__sal" href="https://reclamatiisal.anpc.ro/" target="_blank" rel="noopener"><img src="img/anpc-sal.png" width="201" height="50" alt="ANPC – Soluționarea alternativă a litigiilor (se deschide într-o filă nouă)" loading="lazy"></a>
   </div>
@@ -410,6 +414,6 @@
   Comandă
 </a>
 
-<script src="script.js?v=2026-10-01c"></script>
+<script src="script.js?v=2026-10-01e"></script>
 </body>
 </html>

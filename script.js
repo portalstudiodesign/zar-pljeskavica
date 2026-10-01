@@ -225,15 +225,22 @@ const form = document.getElementById("catering-form");
 const status = form.querySelector(".form__status");
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  let ok = true;
-  form.querySelectorAll("[required]").forEach((input) => {
+  let missingFields = false;
+  form.querySelectorAll("[required]:not([type=checkbox])").forEach((input) => {
     const bad = !input.value.trim();
     input.classList.toggle("is-invalid", bad);
-    if (bad) ok = false;
+    if (bad) missingFields = true;
   });
-  if (!ok) {
+  const consent = form.elements.acord;
+  consent.closest(".form__consent").classList.toggle("is-invalid", !consent.checked);
+  if (missingFields || !consent.checked) {
     status.className = "form__status";
-    status.textContent = "Completează numele și telefonul, te rugăm.";
+    status.textContent = missingFields && !consent.checked
+      ? "Completează numele și telefonul și bifează acordul cu Termenii și Politica de confidențialitate."
+      : missingFields
+        ? "Completează numele și telefonul, te rugăm."
+        : "Bifează acordul cu Termenii și condițiile și Politica de confidențialitate.";
+    (form.querySelector(".is-invalid:not(label)") || consent).focus();
     return;
   }
   if (!CONTACT_EMAIL) {
@@ -248,7 +255,10 @@ form.addEventListener("submit", (e) => {
   status.textContent = "Mulțumim! Revenim cu o ofertă în 24 de ore.";
   form.reset();
 });
-form.addEventListener("input", (e) => e.target.classList.remove("is-invalid"));
+form.addEventListener("input", (e) => {
+  e.target.classList.remove("is-invalid");
+  if (e.target.type === "checkbox" && e.target.checked) e.target.closest(".form__consent").classList.remove("is-invalid");
+});
 
 document.getElementById("year").textContent = new Date().getFullYear();
 

@@ -23,6 +23,7 @@ Site static, fără build și fără dependențe:
 ```
 index.html               conținutul paginii
 confidentialitate.html   politica de confidențialitate (GDPR)
+termeni.html             termeni și condiții
 styles.css               stiluri (culori și dimensiuni în variabilele din :root), inclusiv @font-face
 script.js                meniu mobil, categorii meniu, detalii preparate, animații, formular catering, scântei în hero
 img/                     poze .webp, pictograma ANPC SAL, imaginea de previzualizare pentru link-uri (og-image.jpg)
@@ -58,7 +59,7 @@ GitHub Pages le cere browserelor să păstreze fișierele până la 10 minute. L
 
 - **Pictograma ANPC SAL** în bara de meniu, pe telefon în meniul deschis și în subsol, cu link spre reclamatiisal.anpc.ro (Ord. ANPC 449/2022, mod. 270/2026).
 - **Fără cookie-uri și fără resurse externe:** fonturile sunt găzduite local, deci nu e nevoie de banner de cookie-uri.
-- **Politica de confidențialitate** în `confidentialitate.html`, cu link de lângă formular.
+- **Politica de confidențialitate** (`confidentialitate.html`) și **Termeni și condiții** (`termeni.html`). Formularul de catering are o bifă obligatorie, **nebifată implicit**, cu link spre ambele pagini (se deschid într-o filă nouă).
 - **Alergenii și ingredientele** fiecărui preparat, în blocurile `dish__details` din `index.html` (Reg. UE 1169/2011).
 
 Ce mai e de verificat e în issues, cu eticheta [`legal`](https://github.com/portalstudiodesign/zar-pljeskavica/issues?q=label%3Alegal).
