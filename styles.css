@@ -413,15 +413,6 @@ html:not(.js) .tabs button[aria-selected="true"] { background: var(--ink); }
 }
 .dish--photo .dish__price { grid-row: 2 / 4; }
 .dish--photo .dish__badge { box-shadow: 0 6px 16px -4px rgba(0,0,0,.45); }
-/* AI-generated image disclosure (EU AI Act art. 50) — small, but on every image */
-.ai-img { position: relative; }
-.ai-img::after {
-  content: "Imagine generată AI"; position: absolute; z-index: 2; top: .85rem; right: .85rem; pointer-events: none;
-  padding: .3rem .55rem; border-radius: 999px;
-  font: 600 .62rem/1 var(--body); letter-spacing: .04em; color: rgba(255,255,255,.92);
-  background: rgba(20,17,15,.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-}
-.hero__visual.ai-img::after { top: 6%; right: 8%; }
 .menu__note { margin-top: 2rem; color: var(--muted); font-size: .9rem; }
 
 /* ---------- Story ---------- */

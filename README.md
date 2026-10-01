@@ -52,7 +52,7 @@ GitHub Pages le cere browserelor să păstreze fișierele până la 10 minute. L
 - Poza din prima secțiune e pătrată, cu marginile aproape negre, pentru că se estompează în fundal.
 - Numele fișierelor sunt referite din `index.html`. O poză nouă salvată cu același nume înlocuiește poza veche fără alte modificări.
 - Originalele la rezoluție mare nu sunt în repo.
-- Pozele generate cu AI au clasa `ai-img`, care afișează eticheta „Imagine generată AI” (AI Act, art. 50). Când o poză e înlocuită cu una reală, se scoate clasa.
+- Pozele sunt generate cu AI. Asta e menționat în nota de sub meniu, în subsol și în textul `alt` al fiecărei imagini (AI Act, art. 50). Când toate pozele sunt înlocuite cu unele reale, mențiunile se scot.
 
 ## Conformitate
 
